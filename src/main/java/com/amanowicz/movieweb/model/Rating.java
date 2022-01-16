@@ -1,6 +1,7 @@
 package com.amanowicz.movieweb.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Table(name = "ratings")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Rating {
 
     @Id
@@ -18,8 +20,8 @@ public class Rating {
     @SequenceGenerator(name="rating_seq_gen", sequenceName = "ratings_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "username_id")
-    private Long usernameId;
+    @Column(name = "user_id")
+    private Long userId;
     private String title;
     private int rate;
 

@@ -7,14 +7,14 @@
    http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="create_ratings_1" author="edyta">
+    <changeSet id="create_ratings_5" author="edyta">
         <createTable tableName="ratings">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column  name="title"  type="varchar(255)"/>
             <column  name="rate"  type="integer"/>
-            <column  name="username_id"  type="bigint">
+            <column  name="user_id"  type="bigint">
                 <constraints foreignKeyName="fk_ratings_users"
                              nullable="false"
                              references="users(id)"/>

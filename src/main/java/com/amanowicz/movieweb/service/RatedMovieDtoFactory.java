@@ -14,4 +14,12 @@ public class RatedMovieDtoFactory {
                 .boxOffice(boxOffice)
                 .build();
     }
+
+    public Rating createRating(int rate, Long userId, String title) {
+        return Rating.builder()
+                .rate(rate)
+                .userId(userId)
+                .title(title)
+                .build();
+    }
 }

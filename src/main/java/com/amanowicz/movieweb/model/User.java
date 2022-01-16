@@ -21,7 +21,7 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JoinColumn(name = "username_id")
+    @JoinColumn(name = "user_id")
     private List<Rating> ratings;
 
 }

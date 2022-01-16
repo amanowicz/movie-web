@@ -13,5 +13,4 @@ public interface MovieRatingsService {
 
     List<RatedMovieDto> getTopRatedMovies(String username);
 
-
 }

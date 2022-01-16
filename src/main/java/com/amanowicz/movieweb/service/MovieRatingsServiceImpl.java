@@ -11,12 +11,14 @@ import com.amanowicz.movieweb.model.User;
 import com.amanowicz.movieweb.repository.RatingsRepository;
 import com.amanowicz.movieweb.repository.UserRepository;
 import lombok.Data;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Service
 @Data
@@ -28,6 +30,7 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     private final RatingsRepository ratingsRepository;
     private final RatingsMapper ratingsMapper;
     private final RatedMovieDtoFactory ratedMovieDtoFactory;
+    private final TaskExecutor taskExecutor;
 
     @Override
     public RatedMovieDto rateMovie(RateRequest rateRequest) {
@@ -36,9 +39,7 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
             throw new MovieNotFoundException(String.format("Movie with title: %s not found", rateRequest.getTitle()));
         }
         User user = userRepository.findByUsername(rateRequest.getUsername());
-
-        Rating rating = ratingsRepository.save(new Rating(
-                null, user.getId(), omdbMovie.get().getTitle(), rateRequest.getRate()));
+        Rating rating = ratingsRepository.save(createRating(rateRequest, omdbMovie, user));
 
         return ratingsMapper.map(rating);
     }
@@ -53,17 +54,41 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     @Override
     public List<RatedMovieDto> getTopRatedMovies(String username) {
         List<Rating> ratings = ratingsRepository.findTop10ByUsernameOrderByRateDesc(username);
+        List<CompletableFuture<RatedMovieDto>> futures = new ArrayList<>();
+        ratings.forEach(r -> {
+            CompletableFuture<RatedMovieDto> future = CompletableFuture.supplyAsync(getSupplier(r), taskExecutor);
+            futures.add(future);
+        });
 
-        List<RatedMovieDto> ratedMovieDtos = new ArrayList<>();
+        return futures.stream()
+                .map(CompletableFuture::join)
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(r -> getBoxOfficeValue(r.getBoxOffice()),
+                        Comparator.nullsLast(Comparator.reverseOrder())))
+                .collect(Collectors.toList());
 
-        for (Rating rating : ratings) {
-            Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rating.getTitle());
-            RatedMovieDto ratedMovieDto = omdbMovie
-                    .map(m -> ratedMovieDtoFactory.createRatedMovieDto(rating, m.getBoxOffice()))
-                    .orElse(ratingsMapper.map(rating));
-            ratedMovieDtos.add(ratedMovieDto);
+    }
+
+    private Supplier<RatedMovieDto> getSupplier(Rating rating) {
+       return () -> {
+           Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rating.getTitle());
+           return omdbMovie
+                   .map(m -> ratedMovieDtoFactory.createRatedMovieDto(rating, m.getBoxOffice()))
+                   .orElse(ratingsMapper.map(rating));
+       };
+    }
+
+    private Rating createRating(RateRequest rateRequest, Optional<OmdbMovie> omdbMovie, User user) {
+        return ratedMovieDtoFactory.createRating(rateRequest.getRate(),
+                user.getId(), omdbMovie.get().getTitle());
+    }
+
+    private Long getBoxOfficeValue(String boxOffice) {
+        if (boxOffice == null || boxOffice.isEmpty()) {
+            return null;
         }
+        String value = boxOffice.replaceAll("[^0-9]", "");
 
-        return ratedMovieDtos;
+        return Long.valueOf(value);
     }
 }
