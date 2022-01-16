@@ -21,16 +21,16 @@ public class NominatedMovieServiceImpl implements NominatedMovieService {
     private final NominatedMovieMapper nominatedMovieMapper;
 
     @Override
-    public NominatedMovieDto getMovieByTitle(String title) {
+    public NominatedMovieDto getNominatedMovieInBestPictureCategory(String title) {
         Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(title);
         if (omdbMovie.isEmpty()) {
             throw new MovieNotFoundException(String.format("Movie with title: %s not found", title));
         }
 
         Optional<NominatedMovie> nominatedMovie = nominatedMoviesRepository
-                .findNominatedMovieByNominee(omdbMovie.get().getTitle());
+                .findNominatedMovieByNomineeAndCategory(omdbMovie.get().getTitle(), "Best Picture");
 
         return nominatedMovie.map(nominatedMovieMapper::map)
-                .orElse(new NominatedMovieDto(omdbMovie.get().getTitle(), "No"));
+                .orElse(new NominatedMovieDto(omdbMovie.get().getTitle(), "NO"));
     }
 }

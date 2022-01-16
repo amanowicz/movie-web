@@ -9,6 +9,7 @@
 
     <include file="/movies/nominated-movies.xml" relativeToChangelogFile="true"/>
     <include file="/movies/load_data.xml" relativeToChangelogFile="true"/>
-<!--    <include file="/users/users.xml" relativeToChangelogFile="true"/>-->
+    <include file="/users/users.xml" relativeToChangelogFile="true"/>
+    <include file="/movies/ratings.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

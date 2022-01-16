@@ -4,5 +4,5 @@ import com.amanowicz.movieweb.model.NominatedMovieDto;
 
 public interface NominatedMovieService {
 
-    NominatedMovieDto getMovieByTitle(String title);
+    NominatedMovieDto getNominatedMovieInBestPictureCategory(String title);
 }

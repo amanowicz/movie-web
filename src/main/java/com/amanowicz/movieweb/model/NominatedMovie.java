@@ -10,8 +10,8 @@ import javax.persistence.*;
 public class NominatedMovie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "author_generator")
-    @SequenceGenerator(name="author_generator", sequenceName = "nominated_movies_id_seq")
+    @GeneratedValue(generator = "movie_seq_gen")
+    @SequenceGenerator(name="movie_seq_gen", sequenceName = "nominated_movies_id_seq")
     private Long id;
     private String year;
     private String category;

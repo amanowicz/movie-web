@@ -30,7 +30,7 @@ public class OmdbApiService {
         String uriBuilder = builder.build().toUriString();
 
         OmdbMovie omdbMovie = restTemplate.getForObject(uriBuilder, OmdbMovie.class);
-        if (omdbMovie.getTitle() == null) {
+        if (omdbMovie == null || omdbMovie.getTitle() == null) {
             return Optional.empty();
         }
 

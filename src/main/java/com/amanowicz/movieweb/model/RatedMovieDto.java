@@ -7,10 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class RateRequest {
-
-    @NotNull
-    private final String username;
+public class RatedMovieDto {
 
     @NotNull
     private final String title;
