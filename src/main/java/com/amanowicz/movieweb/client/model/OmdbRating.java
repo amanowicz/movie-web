@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Rating {
+public class OmdbRating {
 
     @JsonProperty("Source")
     private String source;

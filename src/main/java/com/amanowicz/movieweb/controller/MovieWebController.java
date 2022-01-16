@@ -45,6 +45,12 @@ public class MovieWebController {
         return movieRatingsService.getRatedMovies(username);
     }
 
+    @GetMapping("/ratings/{username}/top-rated")
+    public List<RatedMovieDto> getTopRatedMovies(@PathVariable String username) {
+
+        return movieRatingsService.getTopRatedMovies(username);
+    }
+
     @ExceptionHandler({MovieNotFoundException.class})
     public ResponseEntity<String> handleNotFound(MovieNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

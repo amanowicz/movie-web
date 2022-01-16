@@ -14,6 +14,7 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     private final UserRepository userRepository;
     private final RatingsRepository ratingsRepository;
     private final RatingsMapper ratingsMapper;
+    private final RatedMovieDtoFactory ratedMovieDtoFactory;
 
     @Override
     public RatedMovieDto rateMovie(RateRequest rateRequest) {
@@ -46,5 +48,22 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
         User user = userRepository.findByUsername(username);
 
         return ratingsMapper.map(user.getRatings());
+    }
+
+    @Override
+    public List<RatedMovieDto> getTopRatedMovies(String username) {
+        List<Rating> ratings = ratingsRepository.findTop10ByUsernameOrderByRateDesc(username);
+
+        List<RatedMovieDto> ratedMovieDtos = new ArrayList<>();
+
+        for (Rating rating : ratings) {
+            Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rating.getTitle());
+            RatedMovieDto ratedMovieDto = omdbMovie
+                    .map(m -> ratedMovieDtoFactory.createRatedMovieDto(rating, m.getBoxOffice()))
+                    .orElse(ratingsMapper.map(rating));
+            ratedMovieDtos.add(ratedMovieDto);
+        }
+
+        return ratedMovieDtos;
     }
 }

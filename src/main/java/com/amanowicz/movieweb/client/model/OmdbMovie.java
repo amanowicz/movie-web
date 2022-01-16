@@ -37,7 +37,7 @@ public class OmdbMovie {
     @JsonProperty("Poster")
     private String poster;
     @JsonProperty("Ratings")
-    private List<Rating> ratings;
+    private List<OmdbRating> omdbRatings;
     @JsonProperty("BoxOffice")
     private String boxOffice;
 }
