@@ -1,0 +1,26 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="loadData-222" author="edyta" dbms="postgresql">
+        <preConditions onErrorMessage="Failed Pre Conditions for table" onFail="HALT">
+            <and>
+                <tableExists schemaName="public" tableName="nominated_movies"/>
+            </and>
+        </preConditions>
+        <comment>Adding Data...</comment>
+        <loadData file="data/academy_awards.csv"
+                  schemaName="public"
+                  tableName="nominated_movies">
+            <column header="Year" name="year" type="string"/>
+            <column header="Category" name="category" type="string"/>
+            <column header="Nominee" name="nominee" type="string"/>
+            <column header="Additional Info" type="skip"/>
+            <column header="Won?" name="won" type="string"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
