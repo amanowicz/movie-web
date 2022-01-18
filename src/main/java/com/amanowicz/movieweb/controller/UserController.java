@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
@@ -20,12 +21,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
+@Validated
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/register")
-    public UserDto register(@NotBlank @RequestParam String username, @NotBlank @RequestParam String password) {
+    public UserDto register(@RequestParam @NotBlank String username, @RequestParam @NotBlank String password) {
         userService.register(username, password);
         String token = getJWTToken(username);
 
