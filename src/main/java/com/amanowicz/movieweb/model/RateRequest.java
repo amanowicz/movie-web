@@ -10,9 +10,6 @@ import javax.validation.constraints.NotNull;
 public class RateRequest {
 
     @NotNull
-    private final String username;
-
-    @NotNull
     private final String title;
 
     @Min(value = 1, message = "Rate should be in range 1-5")

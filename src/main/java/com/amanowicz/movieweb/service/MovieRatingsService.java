@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MovieRatingsService {
 
-    RatedMovieDto rateMovie(RateRequest rateRequest);
+    RatedMovieDto rateMovie(RateRequest rateRequest, String username);
 
     List<RatedMovieDto> getRatedMovies(String username);
 

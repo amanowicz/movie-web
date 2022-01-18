@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -29,26 +30,22 @@ public class MovieWebController {
 
     @GetMapping("/with-oscar")
     public NominatedMovieDto isOscarMovie(@RequestParam @NonNull String title) {
-
         return nominatedMovieService.getNominatedMovieInBestPictureCategory(title);
     }
 
-    @PostMapping("/ratings")
-    public RatedMovieDto rateMovie(@Valid @RequestBody RateRequest rateRequest) {
-
-        return movieRatingsService.rateMovie(rateRequest);
+    @PutMapping("/ratings")
+    public RatedMovieDto rateMovie(@Valid @RequestBody RateRequest rateRequest, Authentication auth) {
+        return movieRatingsService.rateMovie(rateRequest, auth.getName());
     }
 
-    @GetMapping("/ratings/{username}")
-    public List<RatedMovieDto> getRatedMovies(@PathVariable String username) {
-
-        return movieRatingsService.getRatedMovies(username);
+    @GetMapping("/ratings/top-rated")
+    public List<RatedMovieDto> getTopRatedMovies(Authentication auth) {
+        return movieRatingsService.getTopRatedMovies(auth.getName());
     }
 
-    @GetMapping("/ratings/{username}/top-rated")
-    public List<RatedMovieDto> getTopRatedMovies(@PathVariable String username) {
-
-        return movieRatingsService.getTopRatedMovies(username);
+    @GetMapping("/ratings")
+    public List<RatedMovieDto> getRatedMovies(Authentication auth) {
+        return movieRatingsService.getRatedMovies(auth.getName());
     }
 
     @ExceptionHandler({MovieNotFoundException.class})

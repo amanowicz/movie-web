@@ -1,17 +1,18 @@
 package com.amanowicz.movieweb.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+
 @Entity
 @Table(name = "ratings")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class Rating {
 
@@ -25,4 +26,16 @@ public class Rating {
     private String title;
     private int rate;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rating rating = (Rating) o;
+        return rate == rating.rate && Objects.equals(id, rating.id) && Objects.equals(userId, rating.userId) && Objects.equals(title, rating.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, userId, title, rate);
+    }
 }

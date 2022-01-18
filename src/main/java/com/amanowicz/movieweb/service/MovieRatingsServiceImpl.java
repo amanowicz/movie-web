@@ -33,15 +33,23 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     private final TaskExecutor taskExecutor;
 
     @Override
-    public RatedMovieDto rateMovie(RateRequest rateRequest) {
+    public RatedMovieDto rateMovie(RateRequest rateRequest, String username) {
         Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rateRequest.getTitle());
         if (omdbMovie.isEmpty()) {
             throw new MovieNotFoundException(String.format("Movie with title: %s not found", rateRequest.getTitle()));
         }
-        User user = userRepository.findByUsername(rateRequest.getUsername());
-        Rating rating = ratingsRepository.save(createRating(rateRequest, omdbMovie, user));
+        User user = userRepository.findByUsername(username);
+        Optional<Rating> oldRating = user.getRatings().stream()
+                .filter(r -> r.getTitle().equals(omdbMovie.get().getTitle()))
+                .findFirst();
 
-        return ratingsMapper.map(rating);
+        if (oldRating.isPresent()) {
+            oldRating.get().setRate(rateRequest.getRate());
+            return ratingsMapper.map(oldRating.get());
+        } else {
+            Rating rating = ratingsRepository.save(createRating(rateRequest, omdbMovie, user));
+            return ratingsMapper.map(rating);
+        }
     }
 
     @Override
