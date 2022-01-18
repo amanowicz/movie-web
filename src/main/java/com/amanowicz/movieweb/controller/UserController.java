@@ -1,26 +1,48 @@
 package com.amanowicz.movieweb.controller;
 
 import com.amanowicz.movieweb.model.UserDto;
+import com.amanowicz.movieweb.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
 
-    @PostMapping("/user")
-    public UserDto login(@RequestParam String username, @RequestParam String password){
+    private final UserService userService;
+
+    @PostMapping("/register")
+    public UserDto register(@NotBlank @RequestParam String username, @NotBlank @RequestParam String password) {
+        userService.register(username, password);
         String token = getJWTToken(username);
 
         return new UserDto(username, token);
+    }
+
+    @PostMapping()
+    public UserDto login(@RequestParam String username, @RequestParam String password) {
+        userService.login(username, password);
+        String token = getJWTToken(username);
+
+        return new UserDto(username, token);
+    }
+
+    @ExceptionHandler({AuthenticationServiceException.class})
+    public ResponseEntity<String> handleNotFound(AuthenticationServiceException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
     private String getJWTToken(String username){
