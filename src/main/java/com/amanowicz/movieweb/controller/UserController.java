@@ -42,11 +42,6 @@ public class UserController {
         return new UserDto(username, token);
     }
 
-    @ExceptionHandler({AuthenticationServiceException.class})
-    public ResponseEntity<String> handleNotFound(AuthenticationServiceException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
-    }
-
     private String getJWTToken(String username){
         String secretKey = "movieweb123";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
@@ -63,6 +58,11 @@ public class UserController {
                 .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
 
         return "Bearer " + token;
+    }
+
+    @ExceptionHandler({AuthenticationServiceException.class})
+    public ResponseEntity<String> handleNotFound(AuthenticationServiceException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
 }

@@ -47,7 +47,7 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
             oldRating.get().setRate(rateRequest.getRate());
             return ratingsMapper.map(oldRating.get());
         } else {
-            Rating rating = ratingsRepository.save(createRating(rateRequest, omdbMovie, user));
+            Rating rating = ratingsRepository.save(createRating(rateRequest, omdbMovie.get(), user));
             return ratingsMapper.map(rating);
         }
     }
@@ -86,9 +86,9 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
        };
     }
 
-    private Rating createRating(RateRequest rateRequest, Optional<OmdbMovie> omdbMovie, User user) {
+    private Rating createRating(RateRequest rateRequest, OmdbMovie omdbMovie, User user) {
         return ratedMovieDtoFactory.createRating(rateRequest.getRate(),
-                user.getId(), omdbMovie.get().getTitle());
+                user.getId(), omdbMovie.getTitle());
     }
 
     private Long getBoxOfficeValue(String boxOffice) {
