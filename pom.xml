@@ -18,6 +18,7 @@
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <lombok-mapstruct-binding>0.2.0</lombok-mapstruct-binding>
         <org.projectlombok.version>1.18.22</org.projectlombok.version>
+        <springdoc-openapi-ui.version>1.6.4</springdoc-openapi-ui.version>
 
     </properties>
 
@@ -63,6 +64,11 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.0.13.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
