@@ -2,7 +2,14 @@ package com.amanowicz.movieweb.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.List;
 
 @Data
@@ -17,10 +24,7 @@ public class User {
     private String username;
     private String password;
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true //TODO ?
-    )
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Rating> ratings;
 

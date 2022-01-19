@@ -9,11 +9,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.amanowicz.movieweb.utils.Constants.AUTH_PREFIX;
+import static com.amanowicz.movieweb.utils.Constants.CLIENT_SECRET;
+
 public class JwtUtils {
 
-    //TODO: secret key to properties, Bearer - contants
     public static String createJWTToken(String username){
-        String secretKey = "movieweb123";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 
@@ -25,8 +26,8 @@ public class JwtUtils {
                         .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 60*60*1000))
-                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
+                .signWith(SignatureAlgorithm.HS512, CLIENT_SECRET.getBytes()).compact();
 
-        return "Bearer " + token;
+        return AUTH_PREFIX + token;
     }
 }

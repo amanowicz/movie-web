@@ -1,6 +1,10 @@
 package com.amanowicz.movieweb.config;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,11 +18,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JwtAuthorizationFilter extends OncePerRequestFilter {
+import static com.amanowicz.movieweb.utils.Constants.AUTH_HEADER;
+import static com.amanowicz.movieweb.utils.Constants.AUTH_PREFIX;
+import static com.amanowicz.movieweb.utils.Constants.CLIENT_SECRET;
 
-    private final String AUTH_HEADER = "Authorization";
-    private final String AUTH_PREFIX = "Bearer ";
-    private final String CLIENT_SECRET = "movieweb123";
+public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
