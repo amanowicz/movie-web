@@ -1,5 +1,6 @@
 package com.amanowicz.movieweb.service;
 
+import com.amanowicz.movieweb.exception.UserAlreadyExistsException;
 import com.amanowicz.movieweb.model.User;
 import com.amanowicz.movieweb.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(String username, String password) {
+        if (userRepository.findByUsername(username) != null) {
+            throw new UserAlreadyExistsException(String.format("User with name: %s already exists", username));
+        }
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -27,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public void login(String username, String password) {
         User user = userRepository.findByUsername(username);
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
-            throw new AuthenticationServiceException("Not authenticated user!");
+            throw new AuthenticationServiceException("User not authenticated!");
         }
     }
 }

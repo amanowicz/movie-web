@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final String HEADER = "Authorization";
-    private final String PREFIX = "Bearer ";
-    private final String SECRET = "movieweb123";
+    private final String AUTH_HEADER = "Authorization";
+    private final String AUTH_PREFIX = "Bearer ";
+    private final String CLIENT_SECRET = "movieweb123";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            if (checkJWTToken(request, response)) {
-                Claims claims = validateToken(request);
+            if (isValidAuthHeader(request)) {
+                Claims claims = getClaims(request);
                 if (claims.get("authorities") != null){
                     setUpSpringAuthentication(claims);
                 } else {
@@ -48,14 +48,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
-    private Claims validateToken(HttpServletRequest request) {
-        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+    private Claims getClaims(HttpServletRequest request) {
+        String jwtToken = request.getHeader(AUTH_HEADER).replace(AUTH_PREFIX, "");
 
-        return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
+        return Jwts.parser().setSigningKey(CLIENT_SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }
 
-    private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse response) {
-        String authenticationHeader = request.getHeader(HEADER);
-        return authenticationHeader != null && authenticationHeader.startsWith(PREFIX);
+    private boolean isValidAuthHeader(HttpServletRequest request) {
+        String authenticationHeader = request.getHeader(AUTH_HEADER);
+        return authenticationHeader != null && authenticationHeader.startsWith(AUTH_PREFIX);
     }
 }

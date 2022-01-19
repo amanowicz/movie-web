@@ -14,14 +14,4 @@ public class MovieWebApplication {
         SpringApplication.run(MovieWebApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate(){
-        return new RestTemplate();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 }

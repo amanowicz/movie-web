@@ -11,6 +11,7 @@ import com.amanowicz.movieweb.model.User;
 import com.amanowicz.movieweb.repository.RatingsRepository;
 import com.amanowicz.movieweb.repository.UserRepository;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -33,21 +34,20 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
 
     @Override
     public RatedMovieDto rateMovie(RateRequest rateRequest, String username) {
-        Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rateRequest.getTitle());
-        if (omdbMovie.isEmpty()) {
-            throw new MovieNotFoundException(String.format("Movie with title: %s not found", rateRequest.getTitle()));
-        }
+        OmdbMovie omdbMovie = getOmdbMovie(rateRequest);
         User user = userRepository.findByUsername(username);
+
         Optional<Rating> oldRating = user.getRatings().stream()
-                .filter(r -> r.getTitle().equals(omdbMovie.get().getTitle()))
+                .filter(r -> r.getTitle().equals(omdbMovie.getTitle()))
                 .findFirst();
 
         if (oldRating.isPresent()) {
             oldRating.get().setRate(rateRequest.getRate());
             return ratingsMapper.map(oldRating.get());
         } else {
-            Rating rating = ratingsRepository.save(createRating(rateRequest, omdbMovie.get(), user));
-            return ratingsMapper.map(rating);
+            Rating newRating = createRating(rateRequest, omdbMovie, user);
+            user.getRatings().add(newRating);
+            return ratingsMapper.map(newRating);
         }
     }
 
@@ -63,20 +63,28 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
         List<Rating> ratings = ratingsRepository.findTop10ByUsernameOrderByRateDesc(username);
         List<CompletableFuture<RatedMovieDto>> futures = new ArrayList<>();
         ratings.forEach(r -> {
-            CompletableFuture<RatedMovieDto> future = CompletableFuture.supplyAsync(getSupplier(r), taskExecutor);
+            CompletableFuture<RatedMovieDto> future = CompletableFuture.supplyAsync(getEnrichedRatedMovie(r), taskExecutor);
             futures.add(future);
         });
 
         return futures.stream()
                 .map(CompletableFuture::join)
                 .filter(Objects::nonNull)
-                .sorted(Comparator.comparing(r -> getBoxOfficeValue(r.getBoxOffice()),
+                .sorted(Comparator.comparing(r -> parseBoxOfficeValue(r.getBoxOffice()),
                         Comparator.nullsLast(Comparator.reverseOrder())))
                 .collect(Collectors.toList());
 
     }
 
-    private Supplier<RatedMovieDto> getSupplier(Rating rating) {
+    private OmdbMovie getOmdbMovie(RateRequest rateRequest) {
+        Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rateRequest.getTitle());
+        if (omdbMovie.isEmpty()) {
+            throw new MovieNotFoundException(String.format("Movie with title: %s not found", rateRequest.getTitle()));
+        }
+        return omdbMovie.get();
+    }
+
+    private Supplier<RatedMovieDto> getEnrichedRatedMovie(Rating rating) {
        return () -> {
            Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rating.getTitle());
            return omdbMovie.map(m -> RatedMovieDto.builder()
@@ -96,8 +104,8 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
                 .build();
     }
 
-    private Long getBoxOfficeValue(String boxOffice) {
-        if (boxOffice == null || boxOffice.isEmpty()) {
+    private Long parseBoxOfficeValue(String boxOffice) {
+        if (StringUtils.isEmpty(boxOffice) || boxOffice.equals("N/A")) {
             return null;
         }
         String value = boxOffice.replaceAll("[^0-9]", "");

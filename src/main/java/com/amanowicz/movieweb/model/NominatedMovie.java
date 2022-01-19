@@ -11,12 +11,11 @@ public class NominatedMovie {
 
     @Id
     @GeneratedValue(generator = "movie_seq_gen")
-    @SequenceGenerator(name="movie_seq_gen", sequenceName = "nominated_movies_id_seq")
+    @SequenceGenerator(name="movie_seq_gen", sequenceName = "nominated_movies_id_seq", allocationSize = 1)
     private Long id;
     private String year;
     private String category;
     private String nominee;
     private String won;
-
 
 }

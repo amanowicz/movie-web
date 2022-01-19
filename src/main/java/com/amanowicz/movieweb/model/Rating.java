@@ -21,7 +21,7 @@ public class Rating {
     @SequenceGenerator(name="rating_seq_gen", sequenceName = "ratings_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
     private String title;
     private int rate;

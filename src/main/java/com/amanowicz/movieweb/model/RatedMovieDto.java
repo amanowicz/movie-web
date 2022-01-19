@@ -13,11 +13,13 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RatedMovieDto {
 
+    private static final String RATE_SHOULD_BE_IN_RANGE_1_5 = "Rate should be in range 1-5";
+
     @NotNull
     private final String title;
 
-    @Min(value = 1, message = "Rate should be in range 1-5")
-    @Max(value = 5, message = "Rate should be in range 1-5")
+    @Min(value = 1, message = RATE_SHOULD_BE_IN_RANGE_1_5)
+    @Max(value = 5, message = RATE_SHOULD_BE_IN_RANGE_1_5)
     private final int rate;
 
     private final String boxOffice;

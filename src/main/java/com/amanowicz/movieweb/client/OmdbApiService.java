@@ -1,6 +1,8 @@
 package com.amanowicz.movieweb.client;
 
 import com.amanowicz.movieweb.client.model.OmdbMovie;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -9,6 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class OmdbApiService {
 
     private final RestTemplate restTemplate;
@@ -18,10 +21,6 @@ public class OmdbApiService {
 
     @Value("${omdb.api.key}")
     private String apiKey;
-
-    public OmdbApiService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
 
     public Optional<OmdbMovie> getMovieInfoByTitle(String title) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(apiUrl)

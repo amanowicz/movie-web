@@ -19,7 +19,7 @@ public class User {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true //TODO ?
     )
     @JoinColumn(name = "user_id")
     private List<Rating> ratings;
