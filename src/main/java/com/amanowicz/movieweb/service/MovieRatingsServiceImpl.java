@@ -29,7 +29,6 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     private final UserRepository userRepository;
     private final RatingsRepository ratingsRepository;
     private final RatingsMapper ratingsMapper;
-    private final RatedMovieDtoFactory ratedMovieDtoFactory;
     private final TaskExecutor taskExecutor;
 
     @Override
@@ -80,15 +79,21 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     private Supplier<RatedMovieDto> getSupplier(Rating rating) {
        return () -> {
            Optional<OmdbMovie> omdbMovie = omdbApiService.getMovieInfoByTitle(rating.getTitle());
-           return omdbMovie
-                   .map(m -> ratedMovieDtoFactory.createRatedMovieDto(rating, m.getBoxOffice()))
+           return omdbMovie.map(m -> RatedMovieDto.builder()
+                           .rate(rating.getRate())
+                           .title(rating.getTitle())
+                           .boxOffice(m.getBoxOffice())
+                           .build())
                    .orElse(ratingsMapper.map(rating));
        };
     }
 
     private Rating createRating(RateRequest rateRequest, OmdbMovie omdbMovie, User user) {
-        return ratedMovieDtoFactory.createRating(rateRequest.getRate(),
-                user.getId(), omdbMovie.getTitle());
+        return Rating.builder()
+                .rate(rateRequest.getRate())
+                .userId(user.getId())
+                .title(omdbMovie.getTitle())
+                .build();
     }
 
     private Long getBoxOfficeValue(String boxOffice) {
