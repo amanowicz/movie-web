@@ -1,0 +1,17 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="/movies/nominated_movies.xml" relativeToChangelogFile="true"/>
+    <include file="/movies/insert_nominated_movies.xml" relativeToChangelogFile="true"/>
+    <include file="/changelog/users/users.xml" relativeToChangelogFile="false"/>
+    <include file="/changelog/users/insert_users.xml" relativeToChangelogFile="false"/>
+    <include file="/changelog/ratings/ratings.xml" relativeToChangelogFile="false"/>
+    <include file="/ratings/insert_ratings.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

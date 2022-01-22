@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication()
+@SpringBootApplication
 public class MovieWebApplication {
 
     public static void main(String[] args) {

@@ -1,0 +1,7 @@
+package com.amanowicz.movieweb.utils;
+
+public class TestUtils {
+
+    public static final String TOKEN = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJtb3ZpZXdlYkpXVCIsInN1YiI6ImFkbWluIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImlhdCI6MTY0Mjg4MDUyNywiZXhwIjoxNjQyODg0MTI3fQ.FQhfYOAkPxfzevkM9sm9ZWGad4EdgKqbWtdRShwP-TqkscPGGXeZeV_qQShr7EiM3DREKLA56i7YnRL6GeQSLA";
+
+}

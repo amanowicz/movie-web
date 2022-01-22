@@ -1,0 +1,40 @@
+{
+  "Title": "Dune",
+  "Year": "2021",
+  "Rated": "PG-13",
+  "Released": "22 Oct 2021",
+  "Runtime": "155 min",
+  "Genre": "Action, Adventure, Drama",
+  "Director": "Denis Villeneuve",
+  "Writer": "Jon Spaihts, Denis Villeneuve, Eric Roth",
+  "Actors": "Timothée Chalamet, Rebecca Ferguson, Zendaya",
+  "Plot": "Feature adaptation of Frank Herbert's science fiction novel about the son of a noble family entrusted with the protection of the most valuable asset and most vital element in the galaxy.",
+  "Language": "English, Mandarin",
+  "Country": "United States, Canada",
+  "Awards": "64 wins & 204 nominations",
+  "Poster": "https://m.media-amazon.com/images/M/MV5BN2FjNmEyNWMtYzM0ZS00NjIyLTg5YzYtYThlMGVjNzE1OGViXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg",
+  "Ratings": [
+    {
+      "Source": "Internet Movie Database",
+      "Value": "8.1/10"
+    },
+    {
+      "Source": "Rotten Tomatoes",
+      "Value": "83%"
+    },
+    {
+      "Source": "Metacritic",
+      "Value": "74/100"
+    }
+  ],
+  "Metascore": "74",
+  "imdbRating": "8.1",
+  "imdbVotes": "444,702",
+  "imdbID": "tt1160419",
+  "Type": "movie",
+  "DVD": "22 Oct 2021",
+  "BoxOffice": "$107,351,294",
+  "Production": "N/A",
+  "Website": "N/A",
+  "Response": "True"
+}
