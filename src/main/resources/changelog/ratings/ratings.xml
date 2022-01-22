@@ -12,12 +12,10 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column  name="title"  type="varchar(255)"/>
-            <column  name="rate"  type="integer"/>
-            <column  name="user_id"  type="bigint">
-                <constraints foreignKeyName="fk_ratings_users"
-                             nullable="false"
-                             references="users(id)"/>
+            <column name="title"  type="varchar(255)"/>
+            <column name="rate"  type="integer"/>
+            <column name="user_id"  type="bigint">
+                <constraints foreignKeyName="fk_ratings_users" nullable="false" references="users(id)"/>
             </column>
         </createTable>
     </changeSet>

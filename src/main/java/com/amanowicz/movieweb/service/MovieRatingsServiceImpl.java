@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     }
 
     @Override
-    public List<RatedMovieDto> getRatedMovies(String username) {
+    public Set<RatedMovieDto> getRatedMovies(String username) {
         User user = userRepository.findByUsername(username);
 
         return ratingsMapper.map(user.getRatings());

@@ -5,12 +5,12 @@ import com.amanowicz.movieweb.model.Rating;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface RatingsMapper {
 
-    List<RatedMovieDto> map(List<Rating> ratings);
+    Set<RatedMovieDto> map(Set<Rating> ratings);
 
     @Mapping(target = "boxOffice", ignore = true)
     RatedMovieDto map(Rating rating);

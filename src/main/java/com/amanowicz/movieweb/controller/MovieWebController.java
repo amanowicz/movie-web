@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/movies")
@@ -48,7 +49,7 @@ public class MovieWebController {
     }
 
     @GetMapping("/ratings")
-    public List<RatedMovieDto> getRatedMovies(Authentication auth) {
+    public Set<RatedMovieDto> getRatedMovies(Authentication auth) {
         return movieRatingsService.getRatedMovies(auth.getName());
     }
 
