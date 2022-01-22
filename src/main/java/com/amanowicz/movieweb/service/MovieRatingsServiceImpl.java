@@ -41,8 +41,8 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     public RatedMovieDto rateMovie(RateRequest rateRequest, String username) {
         OmdbMovie omdbMovie = getOmdbMovie(rateRequest);
         User user = userRepository.findByUsername(username);
-
-        Optional<Rating> oldRating = user.getRatings().stream()
+        Optional<Rating> oldRating = ratingsRepository.findAllByUserId(user.getId())
+                .stream()
                 .filter(r -> r.getTitle().equals(omdbMovie.getTitle()))
                 .findFirst();
 
@@ -51,7 +51,7 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
             return ratingsMapper.map(oldRating.get());
         } else {
             Rating newRating = createRating(rateRequest, omdbMovie, user);
-            user.getRatings().add(newRating);
+            ratingsRepository.save(newRating);
             return ratingsMapper.map(newRating);
         }
     }
@@ -60,7 +60,7 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
     public Set<RatedMovieDto> getRatedMovies(String username) {
         User user = userRepository.findByUsername(username);
 
-        return ratingsMapper.map(user.getRatings());
+        return ratingsMapper.map(ratingsRepository.findAllByUserId(user.getId()));
     }
 
     @Override

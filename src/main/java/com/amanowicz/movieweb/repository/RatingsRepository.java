@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface RatingsRepository extends JpaRepository<Rating, Long> {
@@ -14,8 +15,8 @@ public interface RatingsRepository extends JpaRepository<Rating, Long> {
     @Query(value = "select r.title, r.rate, r.id, r.user_id from Ratings r" +
                     " inner join Users u on u.id = r.user_id" +
                     " where u.username = :username" +
-                    " order by r.rate desc limit 10", nativeQuery = true
-    )
+                    " order by r.rate desc limit 10", nativeQuery = true)
     List<Rating> findTop10ByUsernameOrderByRateDesc(@Param("username") String username);
 
+    Set<Rating> findAllByUserId(@Param("user_id") Long userId);
 }
