@@ -4,18 +4,15 @@ import com.amanowicz.movieweb.config.MovieWebPostgresContainer;
 import com.amanowicz.movieweb.config.WebSecurityConfig;
 import com.amanowicz.movieweb.model.NominatedMovieDto;
 import com.amanowicz.movieweb.model.RatedMovieDto;
-import com.amanowicz.movieweb.service.MovieRatingsService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import org.hamcrest.Matchers;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,16 +26,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.Set;
 
 import static com.amanowicz.movieweb.config.WireMockStubs.initStubs;
-import static com.amanowicz.movieweb.utils.TestUtils.TOKEN;
+import static com.amanowicz.movieweb.utils.TestUtils.getJWTToken;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({WebSecurityConfig.class})
 @WireMockTest(httpPort = 8089)
 public class MovieWebControllerIT {
+
+    private static final String TOKEN = getJWTToken();
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -96,12 +88,10 @@ public class MovieWebControllerIT {
         String content = mvcResult.getResponse().getContentAsString();
         Set<RatedMovieDto> result = objectMapper.readValue(content, new TypeReference<Set<RatedMovieDto>>() {});
 
-        assertThat(result, hasSize(2));
-        assertThat(result, hasItems(allOf(
-                hasProperty("title", is("The Shawshank Redemption")),
-                        hasProperty("rate", is(5))),
-                allOf(hasProperty("title", is("The Green Mile")),
-                        hasProperty("rate", is(2)))
+        Assertions.assertEquals(2, result.size());
+        assertThat(result, containsInAnyOrder(
+                RatedMovieDto.builder().title("The Shawshank Redemption").rate(5).build(),
+                RatedMovieDto.builder().title("The Green Mile").rate(2).build()
         ));
     }
 }

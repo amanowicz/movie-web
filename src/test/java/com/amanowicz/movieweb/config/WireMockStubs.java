@@ -8,8 +8,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 public class WireMockStubs {
 
     public static void initStubs() {
-        stubFor(get(urlPathMatching("/omdb/.*"))
-                .willReturn(aResponse().withStatus(200)
+        stubFor(get(urlPathMatching("/omdb/.*")).willReturn(aResponse()
+                        .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withBodyFile("omdb-api.json")));
     }
