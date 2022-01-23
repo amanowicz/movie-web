@@ -1,0 +1,3 @@
+- Extend API with possibility to check if movie won oscar in different categories
+- Add tests for concurrency
+- CSV file contained some malformed rows, so I decided to remove those rows manually (using Excel). Alternatively it is possible to create a parser object in java which would do the same and load data to db.

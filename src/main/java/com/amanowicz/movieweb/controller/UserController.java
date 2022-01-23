@@ -27,7 +27,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestParam @NotBlank String username, @RequestParam @NotBlank String password) {
+    public ResponseEntity<?> register(@RequestParam @NotBlank String username, @RequestParam @NotBlank String password) {
         userService.register(username, password);
         String token = createJWTToken(username);
 
@@ -36,8 +36,8 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping
-    public ResponseEntity login(@RequestParam String username, @RequestParam String password) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         userService.login(username, password);
         String token = createJWTToken(username);
 

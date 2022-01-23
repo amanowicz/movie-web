@@ -45,7 +45,7 @@ public class UserControllerIT {
 
     @Test
     void shouldReturnTokenWhenLogInWithValidUser() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/users")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
                         .queryParam("username", "admin")
                         .queryParam("password", "admin"))
                 .andDo(print())
@@ -58,7 +58,7 @@ public class UserControllerIT {
 
     @Test
     void shouldReturnUnauthorizedWhenLoginWithWrongPassword() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/users")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
                         .queryParam("username", "admin")
                         .queryParam("password", "xyz"))
                 .andDo(print())

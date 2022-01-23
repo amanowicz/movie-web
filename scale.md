@@ -1,0 +1,1 @@
+- Switch to OMDB Api paid user - free user is limited to 1k calls
