@@ -68,7 +68,8 @@ public class MovieRatingsServiceImpl implements MovieRatingsService {
         List<Rating> ratings = ratingsRepository.findTop10ByUsernameOrderByRateDesc(username);
         List<CompletableFuture<RatedMovieDto>> futures = new ArrayList<>();
         ratings.forEach(r -> {
-            CompletableFuture<RatedMovieDto> future = CompletableFuture.supplyAsync(getEnrichedRatedMovie(r), taskExecutor);
+            CompletableFuture<RatedMovieDto> future =
+                    CompletableFuture.supplyAsync(getEnrichedRatedMovie(r), taskExecutor);
             futures.add(future);
         });
 

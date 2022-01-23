@@ -12,7 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.core.task.support.TaskExecutorAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 import static com.amanowicz.movieweb.utils.TestUtils.TEST_USER;
 import static com.amanowicz.movieweb.utils.TestUtils.getOmdbMovie;
@@ -40,6 +44,8 @@ class MovieRatingsServiceTest {
     private RatingsRepository ratingsRepository;
     @Mock
     private RatingsMapper ratingsMapper;
+    @Spy
+    private TaskExecutor taskExecutor = new TaskExecutorAdapter(Executors.newSingleThreadExecutor());
 
     @InjectMocks
     private MovieRatingsServiceImpl movieRatingsService;
