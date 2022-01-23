@@ -3,6 +3,8 @@ package com.amanowicz.movieweb.model;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
@@ -20,6 +22,7 @@ public class NominatedMovie {
     private String year;
     private String category;
     private String nominee;
-    private String won;
+    @Enumerated(EnumType.STRING)
+    private WonOscar won;
 
 }

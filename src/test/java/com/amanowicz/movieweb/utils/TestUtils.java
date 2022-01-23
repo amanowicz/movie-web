@@ -38,7 +38,7 @@ public class TestUtils {
     }
 
     public static OmdbMovie getOmdbMovie() throws IOException {
-        return readValue("__files/omdb-api.json", OmdbMovie.class);
+        return readValue("__files/omdb-api-dune.json", OmdbMovie.class);
     }
 
     private static <T> T readValue(String filename, Class<T> tClass) throws IOException {

@@ -5,6 +5,7 @@ import com.amanowicz.movieweb.exception.MovieNotFoundException;
 import com.amanowicz.movieweb.mapper.NominatedMovieMapper;
 import com.amanowicz.movieweb.model.NominatedMovie;
 import com.amanowicz.movieweb.model.NominatedMovieDto;
+import com.amanowicz.movieweb.model.WonOscar;
 import com.amanowicz.movieweb.repository.NominatedMoviesRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +37,7 @@ class NominatedMovieServiceImplTest {
 
     @Test
     public void shouldConfirmThatMovieWonOscarInBestPictureCategory() throws IOException {
-        NominatedMovieDto expected = new NominatedMovieDto("Dune", "YES");
+        NominatedMovieDto expected = new NominatedMovieDto("Dune", WonOscar.YES);
         NominatedMovie nominatedMovie = getNominatedMovie();
 
         when(omdbApiService.getMovieInfoByTitle("Dune")).thenReturn(Optional.of(getOmdbMovie()));
@@ -62,7 +63,7 @@ class NominatedMovieServiceImplTest {
         nominatedMovie.setCategory("Best Picture");
         nominatedMovie.setNominee("Dune");
         nominatedMovie.setYear("2021");
-        nominatedMovie.setWon("YES");
+        nominatedMovie.setWon(WonOscar.YES);
         return nominatedMovie;
     }
 

@@ -6,6 +6,7 @@ import com.amanowicz.movieweb.exception.MovieNotFoundException;
 import com.amanowicz.movieweb.mapper.NominatedMovieMapper;
 import com.amanowicz.movieweb.model.NominatedMovie;
 import com.amanowicz.movieweb.model.NominatedMovieDto;
+import com.amanowicz.movieweb.model.WonOscar;
 import com.amanowicz.movieweb.repository.NominatedMoviesRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,6 @@ public class NominatedMovieServiceImpl implements NominatedMovieService {
                 .findNominatedMovieByNomineeAndCategory(omdbMovie.get().getTitle(), "Best Picture");
 
         return nominatedMovie.map(nominatedMovieMapper::map)
-                .orElse(new NominatedMovieDto(omdbMovie.get().getTitle(), "NO"));
+                .orElse(new NominatedMovieDto(omdbMovie.get().getTitle(), WonOscar.NO));
     }
 }

@@ -8,6 +8,6 @@ import lombok.Data;
 public class NominatedMovieDto {
 
     private final String nominee;
-    private final String won;
+    private final WonOscar won;
 
 }
