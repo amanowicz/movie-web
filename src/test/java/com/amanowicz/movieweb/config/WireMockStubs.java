@@ -23,5 +23,10 @@ public class WireMockStubs {
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
                 .withBodyFile("omdb-api-shawshank.json")));
+
+        stubFor(get(urlEqualTo("/omdb/?apikey=123&t=Prestige")).willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBodyFile("omdb-api-prestige.json")));
     }
 }

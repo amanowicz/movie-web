@@ -15,11 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -29,6 +31,8 @@ import java.util.Set;
 
 import static com.amanowicz.movieweb.config.WireMockStubs.initStubs;
 import static com.amanowicz.movieweb.utils.TestUtils.getJWTToken;
+import static com.amanowicz.movieweb.utils.TestUtils.getNewRateRequestAsString;
+import static com.amanowicz.movieweb.utils.TestUtils.getUpdateRateRequestAsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -113,6 +117,61 @@ public class MovieWebControllerIT {
         assertThat(result, contains(
                 RatedMovieDto.builder().title("The Green Mile").rate(2).boxOffice("$136,801,374").build(),
                 RatedMovieDto.builder().title("The Shawshank Redemption").rate(5).boxOffice("$28,699,976").build()
+        ));
+    }
+
+    @Test
+    @Transactional
+    void shouldAllowUserToRateAMovie() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/movies/ratings")
+                        .content(getNewRateRequestAsString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/movies/ratings")
+                        .header("Authorization", TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = mvcResult.getResponse().getContentAsString();
+        List<RatedMovieDto> result = objectMapper.readValue(content, new TypeReference<List<RatedMovieDto>>() {});
+
+        Assertions.assertEquals(3, result.size());
+        assertThat(result, containsInAnyOrder(
+                RatedMovieDto.builder().title("The Shawshank Redemption").rate(5).build(),
+                RatedMovieDto.builder().title("The Green Mile").rate(2).build(),
+                RatedMovieDto.builder().title("Prestige").rate(4).build()
+        ));
+    }
+
+    @Test
+    @Transactional
+    void shouldAllowUserToUpdateAMovieRate() throws Exception {
+       mockMvc.perform(MockMvcRequestBuilders.put("/movies/ratings")
+                        .content(getUpdateRateRequestAsString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/movies/ratings")
+                        .header("Authorization", TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content = mvcResult.getResponse().getContentAsString();
+        List<RatedMovieDto> result = objectMapper.readValue(content, new TypeReference<List<RatedMovieDto>>() {});
+
+        Assertions.assertEquals(2, result.size());
+        assertThat(result, containsInAnyOrder(
+                RatedMovieDto.builder().title("The Shawshank Redemption").rate(1).build(),
+                RatedMovieDto.builder().title("The Green Mile").rate(2).build()
         ));
     }
 }

@@ -1,10 +1,12 @@
 package com.amanowicz.movieweb.utils;
 
 import com.amanowicz.movieweb.client.model.OmdbMovie;
+import com.amanowicz.movieweb.model.RateRequest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import liquibase.pro.packaged.T;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -39,6 +41,24 @@ public class TestUtils {
 
     public static OmdbMovie getOmdbMovie() throws IOException {
         return readValue("__files/omdb-api-dune.json", OmdbMovie.class);
+    }
+
+    public static String getNewRateRequestAsString() throws IOException {
+        RateRequest rateRequest = new RateRequest("Prestige", 4);
+        return getStringFromObject(rateRequest);
+    }
+
+    public static String getUpdateRateRequestAsString() throws IOException {
+        RateRequest rateRequest = new RateRequest("The Shawshank Redemption", 1);
+        return getStringFromObject(rateRequest);
+    }
+
+    private static <T> String getStringFromObject(T object) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return objectMapper.writeValueAsString(object);
     }
 
     private static <T> T readValue(String filename, Class<T> tClass) throws IOException {
