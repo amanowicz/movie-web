@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.amanowicz.movieweb.utils.TestUtils.getNominatedMovieWithOscar;
 import static com.amanowicz.movieweb.utils.TestUtils.getOmdbMovie;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class NominatedMovieServiceImplTest {
+class NominatedMovieServiceTest {
 
     @Mock
     private NominatedMoviesRepository nominatedMoviesRepository;
@@ -38,9 +39,9 @@ class NominatedMovieServiceImplTest {
     @Test
     public void shouldConfirmThatMovieWonOscarInBestPictureCategory() throws IOException {
         NominatedMovieDto expected = new NominatedMovieDto("Dune", WonOscar.YES);
-        NominatedMovie nominatedMovie = getNominatedMovie();
+        NominatedMovie nominatedMovie = getNominatedMovieWithOscar();
 
-        when(omdbApiService.getMovieInfoByTitle("Dune")).thenReturn(Optional.of(getOmdbMovie()));
+        when(omdbApiService.getMovieInfoByTitle("Dune")).thenReturn(Optional.of(getOmdbMovie("Dune")));
         when(nominatedMoviesRepository.findNominatedMovieByNomineeAndCategory("Dune", "Best Picture"))
                 .thenReturn(Optional.of(nominatedMovie));
         when(nominatedMovieMapper.map(nominatedMovie)).thenReturn(expected);
@@ -55,16 +56,6 @@ class NominatedMovieServiceImplTest {
         when(omdbApiService.getMovieInfoByTitle(any())).thenReturn(Optional.empty());
 
         assertThrows(MovieNotFoundException.class, () -> service.getNominatedMovieInBestPictureCategory("xyz"));
-    }
-
-    private NominatedMovie getNominatedMovie() {
-        NominatedMovie nominatedMovie = new NominatedMovie();
-        nominatedMovie.setId(1L);
-        nominatedMovie.setCategory("Best Picture");
-        nominatedMovie.setNominee("Dune");
-        nominatedMovie.setYear("2021");
-        nominatedMovie.setWon(WonOscar.YES);
-        return nominatedMovie;
     }
 
 }
