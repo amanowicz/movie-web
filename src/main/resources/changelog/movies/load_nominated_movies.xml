@@ -6,7 +6,7 @@
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
    http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet id="loadData-2222341" author="edyta" dbms="postgresql">
+    <changeSet id="load_nominated_movies_1" author="edyta" dbms="postgresql">
         <preConditions onErrorMessage="Failed Pre Conditions for table" onFail="HALT">
             <and>
                 <tableExists schemaName="public" tableName="nominated_movies"/>

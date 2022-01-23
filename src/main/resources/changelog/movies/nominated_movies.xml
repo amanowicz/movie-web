@@ -7,7 +7,7 @@
    http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="create_nominated_movies_2226421" author="edyta">
+    <changeSet id="create_nominated_movies_1" author="edyta">
         <createTable tableName="nominated_movies">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>

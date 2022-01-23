@@ -1,2 +1,3 @@
+- No specific user authorities are required to use the application
 - OMDB API has no limit of requests
 - MovieWeb searches are based on OMDB API, therefore user is allowed to only rate movies which exists in OMDB database
