@@ -1,0 +1,13 @@
+@startuml
+actor User as user
+participant "MovieWebAPI" as api
+participant "OMDB API" as omdb
+database "Movies DB" as db
+
+user -> api: GET /with-oscar?title=
+api -> omdb: get movie's details
+omdb --> api: OMDB movie
+api -> api: set correct title
+api -> db: get nominated movie
+api -> user: return Movie
+@enduml
